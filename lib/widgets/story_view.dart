@@ -34,10 +34,19 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+
+  /// The Action bar to be shown at the top of the Story View
+  final Widget? topActionBar;
+
+  /// The Action bar to be shown at the bottom of the Story View.
+  final Widget? bottomActionBar;
   StoryItem(
     this.view, {
     required this.duration,
+    this.topActionBar,
+    this.bottomActionBar,
     this.shown = false,
+
   });
 
   /// Short hand to create text-only page.
@@ -58,6 +67,8 @@ class StoryItem {
     bool roundedBottom = false,
     EdgeInsetsGeometry? textOuterPadding,
     Duration? duration,
+    Widget? topActionBar,
+    Widget? bottomActionBar,
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -117,6 +128,8 @@ class StoryItem {
     Widget? errorWidget,
     EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
+    Widget? topActionBar,
+    Widget? bottomActionBar,
   }) {
     return StoryItem(
       Container(
@@ -173,6 +186,8 @@ class StoryItem {
     Widget? errorWidget,
     EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
+    Widget? topActionBar,
+    Widget? bottomActionBar,
   }) {
     return StoryItem(
       ClipRRect(
@@ -229,6 +244,8 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
     Widget? loadingWidget,
     Widget? errorWidget,
+    Widget? topActionBar,
+    Widget? bottomActionBar,
   }) {
     return StoryItem(
         Container(
@@ -273,6 +290,8 @@ class StoryItem {
     String? caption,
     bool shown = false,
     Duration? duration,
+    Widget? topActionBar,
+    Widget? bottomActionBar,
   }) {
     return StoryItem(
         Container(
@@ -333,6 +352,8 @@ class StoryItem {
     bool roundedTop = true,
     bool roundedBottom = false,
     Duration? duration,
+    Widget? topActionBar,
+    Widget? bottomActionBar,
   }) {
     return StoryItem(
       Container(
@@ -659,6 +680,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ),
             ),
           ),
+          currentstoryItem.topActionBar != null
+                  ? Container(
+                      child: GestureDetector(
+                        onTapDown: onTapDown,
+                        onTapUp: onTapUp,
+                        child: currentstoryItem.topActionBar,
+                      ),
+                    )
+                  : Container(),
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
@@ -721,6 +751,17 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }),
                 width: 70),
           ),
+          currentstoryItem.bottomActionBar != null
+                  ? SafeArea(
+                      child: Container(
+                        child: GestureDetector(
+                          onTapDown: onTapDown,
+                          onTapUp: onTapUp,
+                          child: currentstoryItem.bottomActionBar,
+                        ),
+                      ),
+                    )
+                  : Container(),
         ],
       ),
     );
