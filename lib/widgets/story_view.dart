@@ -46,7 +46,6 @@ class StoryItem {
     this.topActionBar,
     this.bottomActionBar,
     this.shown = false,
-
   });
 
   /// Short hand to create text-only page.
@@ -90,10 +89,11 @@ class StoryItem {
             bottom: Radius.circular(roundedBottom ? 8 : 0),
           ),
         ),
-        padding: textOuterPadding?? EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 16,
-        ),
+        padding: textOuterPadding ??
+            EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 16,
+            ),
         child: Center(
           child: Text(
             title,
@@ -153,12 +153,13 @@ class StoryItem {
                   margin: EdgeInsets.only(
                     bottom: 24,
                   ),
-                  padding: captionOuterPadding?? EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
+                  padding: captionOuterPadding ??
+                      EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                   color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption?? const SizedBox.shrink(),
+                  child: caption ?? const SizedBox.shrink(),
                 ),
               ),
             )
@@ -208,11 +209,12 @@ class StoryItem {
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 16),
-                  padding: captionOuterPadding?? EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: captionOuterPadding ??
+                      EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Container(
-                      child: caption?? const SizedBox.shrink(),
+                      child: caption ?? const SizedBox.shrink(),
                       width: double.infinity,
                     ),
                   ),
@@ -269,7 +271,7 @@ class StoryItem {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                     color:
                         caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption?? const SizedBox.shrink(),
+                    child: caption ?? const SizedBox.shrink(),
                   ),
                 ),
               )
@@ -427,6 +429,7 @@ class StoryView extends StatefulWidget {
 
   /// Indicator Color
   final Color? indicatorColor;
+
   /// Indicator Foreground Color
   final Color? indicatorForegroundColor;
 
@@ -448,7 +451,10 @@ class StoryView extends StatefulWidget {
     this.indicatorColor,
     this.indicatorForegroundColor,
     this.indicatorHeight = IndicatorHeight.large,
-    this.indicatorOuterPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8,),
+    this.indicatorOuterPadding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 8,
+    ),
   });
 
   @override
@@ -474,6 +480,18 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     item ??= widget.storyItems.last;
     return item?.view ?? Container();
+  }
+
+  Widget? get topActionBar {
+    var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+    item ??= widget.storyItems.last;
+    return item?.topActionBar;
+  }
+
+  Widget? get bottomActionBar {
+    var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+    item ??= widget.storyItems.last;
+    return item?.bottomActionBar;
   }
 
   @override
@@ -648,6 +666,23 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
   }
 
+  void onTapDown(details) {
+    _nextDebouncer?.cancel();
+    _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
+  }
+
+  void onTapUp(details) {
+    if (_nextDebouncer?.isActive == true) {
+      _nextDebouncer?.cancel();
+      _nextDebouncer = null;
+
+      _goForward();
+    } else {
+      _nextDebouncer?.cancel();
+      _nextDebouncer = null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -680,15 +715,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ),
             ),
           ),
-          currentstoryItem.topActionBar != null
-                  ? Container(
-                      child: GestureDetector(
-                        onTapDown: onTapDown,
-                        onTapUp: onTapUp,
-                        child: currentstoryItem.topActionBar,
-                      ),
-                    )
-                  : Container(),
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
@@ -751,17 +777,17 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }),
                 width: 70),
           ),
-          currentstoryItem.bottomActionBar != null
-                  ? SafeArea(
-                      child: Container(
-                        child: GestureDetector(
-                          onTapDown: onTapDown,
-                          onTapUp: onTapUp,
-                          child: currentstoryItem.bottomActionBar,
-                        ),
-                      ),
-                    )
-                  : Container(),
+          bottomActionBar != null
+              ? SafeArea(
+                  child: Container(
+                    child: GestureDetector(
+                      onTapDown: onTapDown,
+                      onTapUp: onTapUp,
+                      child: bottomActionBar,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
@@ -837,8 +863,11 @@ class PageBarState extends State<PageBar> {
                 right: widget.pages.last == it ? 0 : this.spacing),
             child: StoryProgressIndicator(
               isPlaying(it) ? widget.animation!.value : (it.shown ? 1 : 0),
-              indicatorHeight:
-                  widget.indicatorHeight == IndicatorHeight.large ? 5 : widget.indicatorHeight == IndicatorHeight.medium ? 3 : 2,
+              indicatorHeight: widget.indicatorHeight == IndicatorHeight.large
+                  ? 5
+                  : widget.indicatorHeight == IndicatorHeight.medium
+                      ? 3
+                      : 2,
               indicatorColor: widget.indicatorColor,
               indicatorForegroundColor: widget.indicatorForegroundColor,
             ),
@@ -872,11 +901,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        this.indicatorForegroundColor?? Colors.white.withOpacity(0.8),
+        this.indicatorForegroundColor ?? Colors.white.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        this.indicatorColor?? Colors.white.withOpacity(0.4),
+        this.indicatorColor ?? Colors.white.withOpacity(0.4),
         1.0,
       ),
     );
