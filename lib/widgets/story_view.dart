@@ -777,17 +777,34 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }),
                 width: 70),
           ),
+          topActionBar != null
+              ? SafeArea(
+                  child: Container(
+                    child: GestureDetector(
+                      onTapDown: onTapDown,
+                      onTapUp: onTapUp,
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: topActionBar,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
           bottomActionBar != null
               ? SafeArea(
                   child: Container(
                     child: GestureDetector(
                       onTapDown: onTapDown,
                       onTapUp: onTapUp,
-                      child: bottomActionBar,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: bottomActionBar,
+                      ),
                     ),
                   ),
                 )
-              : Container(),
+              : const SizedBox(),
         ],
       ),
     );
