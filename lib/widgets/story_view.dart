@@ -168,6 +168,8 @@ class StoryItem {
       ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      topActionBar: topActionBar,
+      bottomActionBar: bottomActionBar,
     );
   }
 
@@ -230,6 +232,8 @@ class StoryItem {
       ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      topActionBar: topActionBar,
+      bottomActionBar: bottomActionBar,
     );
   }
 
@@ -279,7 +283,10 @@ class StoryItem {
           ),
         ),
         shown: shown,
-        duration: duration ?? Duration(seconds: 10));
+        duration: duration ?? Duration(seconds: 10),
+        topActionBar: topActionBar,
+        bottomActionBar: bottomActionBar,
+    );
   }
 
   /// Shorthand for creating a story item from an image provider such as `AssetImage`
@@ -340,7 +347,10 @@ class StoryItem {
           ),
         ),
         shown: shown,
-        duration: duration ?? Duration(seconds: 3));
+        duration: duration ?? Duration(seconds: 3),
+        topActionBar: topActionBar,
+        bottomActionBar: bottomActionBar,
+    );
   }
 
   /// Shorthand for creating an inline story item from an image provider such as `AssetImage`
@@ -389,6 +399,8 @@ class StoryItem {
       ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      topActionBar: topActionBar,
+      bottomActionBar: bottomActionBar,
     );
   }
 }
